@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documentation Demo API - Redoc CE</title>
+</head>
+<body>
+    <div id="redoc-container"></div>
+    <script src="https://unpkg.com/redoc@2.5.2/bundles/redoc.standalone.js"></script>
+    <script>
+        Redoc.init('/openapi/v1.json', {}, document.getElementById('redoc-container'));
+    </script>
+</body>
+</html>
