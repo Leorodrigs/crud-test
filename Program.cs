@@ -2,9 +2,20 @@ using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
+const string localApiBaseUrl = "http://localhost:5099";
+const string mintlifyPreviewUrl = "http://localhost:3000";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MintlifyLocal", policy =>
+        policy
+            .WithOrigins(mintlifyPreviewUrl)
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 builder.Services.AddOpenApi(options =>
 {
     options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
@@ -16,6 +27,14 @@ builder.Services.AddOpenApi(options =>
             Description = "Simple API created to compare OpenAPI documentation interfaces.",
             Version = "v1"
         };
+        document.Servers =
+        [
+            new OpenApiServer
+            {
+                Url = localApiBaseUrl,
+                Description = "Local ASP.NET Core API"
+            }
+        ];
 
         return Task.CompletedTask;
     });
@@ -24,6 +43,8 @@ builder.Services.AddOpenApi(options =>
 var app = builder.Build();
 
 const string openApiDocumentUrl = "/openapi/v1.json";
+
+app.UseCors("MintlifyLocal");
 
 app.MapOpenApi();
 
@@ -41,6 +62,9 @@ app.MapScalarApiReference(options =>
     .ExcludeFromDescription();
 
 app.MapControllers();
+
+app.MapGet("/mintlify", () => Results.Redirect(mintlifyPreviewUrl))
+    .ExcludeFromDescription();
 
 var documentationPages = new Dictionary<string, string>
 {

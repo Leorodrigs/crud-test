@@ -1,0 +1,22 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Documentation Demo API",
+  "colors": {
+    "primary": "#0D9373"
+  },
+  "api": {
+    "playground": {
+      "display": "interactive",
+      "proxy": false
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "API Reference",
+        "openapi": "http://localhost:5099/openapi/v1.json"
+      }
+    ]
+  }
+}
